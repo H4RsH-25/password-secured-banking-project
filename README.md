@@ -1,0 +1,154 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Users {
+private:
+    string name;
+    float balance;
+    string password;
+
+public:
+   
+    Users() : balance(0) {}
+
+    void askName() {
+        cout << "Enter name: ";
+        getline(cin, name);
+    }
+
+    void setPassword() {
+        cout << "Set your password: ";
+        getline(cin, password);
+    }
+
+    bool validatePassword() {
+        string inputPassword;
+        cout << "Enter password: ";
+        getline(cin, inputPassword);
+        return inputPassword == password;
+    }
+
+    void showBalance() {
+        if (validatePassword()) {
+            cout << "Your balance is: $" << balance << endl;
+        } else {
+            cout << "Invalid password. Access denied." << endl;
+        }
+    }
+
+    void getMoney(float amount) {
+        if (validatePassword()) {
+            int check;
+            cout << "A withdrawal request of $" << amount << " is requested. If this isn't you, press 1 to cancel, else press any other key: ";
+            cin >> check;
+            cin.ignore(); 
+            if (check == 1) {
+                cout << "Your action is canceled successfully." << endl;
+                return;
+            } else {
+                if (amount > balance) {
+                    cout << "Insufficient balance." << endl;
+                } else {
+                    balance -= amount;
+                    cout << "Withdrawal successful. Your new balance is: $" << balance << endl;
+                }
+            }
+        } else {
+            cout << "Invalid password. Access denied." << endl;
+        }
+    }
+
+    void addMoney(float deposit) {
+        if (validatePassword()) {
+            int check;
+            cout << "A deposit of $" << deposit << " is being added. If this isn't you, press 1 to cancel, else press any other key: ";
+            cin >> check;
+            cin.ignore(); 
+            if (check == 1) {
+                cout << "Your action is canceled successfully." << endl;
+                return;
+            } else {
+                balance += deposit;
+                cout << "Deposit successful. Your new balance is: $" << balance << endl;
+            }
+        } else {
+            cout << "Invalid password. Access denied." << endl;
+        }
+    }
+};
+
+int main() {
+    vector<Users> userList;
+    int option; int count= -1 ;
+    do { 
+    
+        cout << "\nSelect an option:\n1. Add New User\n2. Show Balance\n3. Deposit Money\n4. Withdraw Money\n5. Exit\n";
+     
+        cin >> option;
+    if(option = 1){
+        count ++ ;
+    }
+        cin.ignore();
+
+        switch (option) {
+        case 1: {
+            Users newUser;
+            newUser.askName();
+            newUser.setPassword();
+            userList.push_back(newUser);
+            cout << "New user added successfully. \n" <<"your user id is "<< count << endl;
+            break;
+        }
+        case 2: {
+            int userId;
+            cout << "Enter user ID (starting from 0): ";
+            cin >> userId;
+            cin.ignore();
+            if (userId >= 0 && userId < userList.size()) {
+                userList[userId].showBalance();
+            } else {
+                cout << "Invalid user ID." << endl;
+            }
+            break;
+        }
+        case 3: {
+            int userId;
+            float depositAmount;
+            cout << "Enter user ID (starting from 0): ";
+            cin >> userId;
+            cout << "Enter deposit amount: ";
+            cin >> depositAmount;
+            cin.ignore();
+            if (userId >= 0 && userId < userList.size()) {
+                userList[userId].addMoney(depositAmount);
+            } else {
+                cout << "Invalid user ID." << endl;
+            }
+            break;
+        }
+        case 4: {
+            int userId;
+            float withdrawAmount;
+            cout << "Enter user ID (starting from 0): ";
+            cin >> userId;
+            cout << "Enter withdrawal amount: ";
+            cin >> withdrawAmount;
+            cin.ignore();
+            if (userId >= 0 && userId < userList.size()) {
+                userList[userId].getMoney(withdrawAmount);
+            } else {
+                cout << "Invalid user ID." << endl;
+            }
+            break;
+        }
+        case 5:
+            cout << "Exiting program." << endl;
+            break;
+        default:
+            cout << "Invalid option. Please try again." << endl;
+        }
+    } while (option != 5);
+
+    return 0;
+}
